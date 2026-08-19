@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Schedule — Pulse Esports Club</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0B0E14;
+            --panel: #151A24;
+            --panel-2: #1C2230;
+            --line: #262E3F;
+            --text: #EDEFF4;
+            --muted: #8A93A6;
+            --violet: #7C5CFC;
+            --cyan: #2FE6D1;
+            --amber: #FFB020;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background:
+                linear-gradient(rgba(11, 14, 20, .88), rgba(11, 14, 20, .93)),
+                url("images/bg-nebula.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .display {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Navbar — matches index.html's pulse-navbar */
+        .pulse-navbar {
+            min-height: 76px;
+            background: rgba(11, 14, 20, .90);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            color: var(--text) !important;
+            font-weight: 800;
+            letter-spacing: .06rem;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .pulse-navbar .nav-link {
+            position: relative;
+            margin-left: 8px;
+            color: #d4d9e5 !important;
+            font-weight: 600;
+        }
+
+        .pulse-navbar .nav-link:hover,
+        .pulse-navbar .nav-link.active {
+            color: var(--cyan) !important;
+        }
+
+        .pulse-navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 3px;
+            width: 0;
+            height: 2px;
+            background: var(--cyan);
+            transform: translateX(-50%);
+            transition: width .25s ease;
+        }
+
+        .pulse-navbar .nav-link:hover::after,
+        .pulse-navbar .nav-link.active::after {
+            width: 55%;
+        }
+
+        .pulse-navbar .merch-link {
+            margin-left: 14px;
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+            border: 1px solid rgba(47, 230, 209, .6);
+            border-radius: 6px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 3.5rem 0 2rem;
+            border-bottom: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px 260px at 15% 0%, rgba(124, 92, 252, .18), transparent 70%),
+                radial-gradient(500px 240px at 90% 30%, rgba(47, 230, 209, .12), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Fills the box completely — no letterboxing. Use .hero-img-contain instead if an image needs to show in full without cropping. */
+        .hero-img {
+            max-height: 220px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .hero-img-contain {
+            object-fit: contain;
+            background: var(--panel);
+        }
+
+        .eyebrow {
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .78rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-top: 1.75rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            margin: .4rem 0 .5rem;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 560px;
+        }
+
+        /* Day tabs */
+        .day-tabs {
+            display: flex;
+            gap: .5rem;
+            margin: 1.75rem 0 0;
+            flex-wrap: wrap;
+        }
+
+        .day-tab {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            color: var(--muted);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            letter-spacing: .03em;
+            padding: .55rem 1.3rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: .95rem;
+            transition: all .15s ease;
+        }
+
+        .day-tab .sub {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            font-size: .68rem;
+            color: var(--muted);
+            letter-spacing: .05em;
+        }
+
+        .day-tab.active {
+            background: linear-gradient(135deg, var(--violet), #5B3FE0);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .day-tab.active .sub {
+            color: rgba(255, 255, 255, .75);
+        }
+
+        /* Live clock card */
+        .live-clock-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 1.4rem 1.6rem;
+            text-align: center;
+            height: fit-content;
+        }
+
+        .live-clock-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            margin-bottom: .6rem;
+        }
+
+        .live-clock-label .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 6px var(--cyan);
+            animation: pulse 1.4s infinite;
+        }
+
+        .live-clock-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: var(--cyan);
+            text-shadow: 0 0 10px rgba(47, 230, 209, .5);
+            letter-spacing: .02em;
+        }
+
+        .live-clock-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .78rem;
+            color: var(--muted);
+            margin-top: .3rem;
+        }
+
+        @media (max-width: 991px) {
+            .live-clock-card {
+                margin-top: 1.5rem;
+            }
+        }
+
+        /* Match list */
+        .match-section {
+            padding: 2.5rem 0 5rem;
+        }
+
+        .match-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+            margin-bottom: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: border-color .15s ease, transform .15s ease;
+        }
+
+        .match-card:hover {
+            border-color: #3A4258;
+            transform: translateY(-1px);
+        }
+
+        .match-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.05rem;
+            width: 78px;
+            flex-shrink: 0;
+            color: var(--text);
+        }
+
+        .match-time .zone {
+            display: block;
+            font-size: .65rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .match-game {
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--cyan);
+            font-weight: 600;
+            margin-bottom: .2rem;
+        }
+
+        .teams {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .teams .vs {
+            color: var(--muted);
+            font-weight: 500;
+            font-size: .9rem;
+            margin: 0 .4rem;
+        }
+
+        .match-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .live-badge {
+            background: rgba(255, 52, 52, .15);
+            color: #FF5C5C;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem;
+            font-weight: 700;
+            padding: .25rem .55rem;
+            border-radius: 6px;
+            letter-spacing: .06em;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .live-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #FF5C5C;
+            animation: pulse 1.4s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .25;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .live-badge .dot {
+                animation: none;
+            }
+        }
+
+        .fav-btn {
+            background: none;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all .15s ease;
+        }
+
+        .fav-btn:hover {
+            border-color: var(--violet);
+            color: var(--violet);
+        }
+
+        .fav-btn.saved {
+            background: rgba(124, 92, 252, .15);
+            border-color: var(--violet);
+            color: var(--violet);
+        }
+
+        .fav-btn:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .75rem;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            margin: 2.2rem 0 .9rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .section-label::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+            border: 1px dashed var(--line);
+            border-radius: 14px;
+        }
+
+        footer.pulse-footer {
+            background: #070a10;
+            border-top: 1px solid var(--line);
+            padding: 3rem 0 1.5rem;
+            color: var(--muted);
+            font-size: .9rem;
+        }
+
+        .pulse-footer .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .8rem;
+        }
+
+        .pulse-footer .footer-brand img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .pulse-footer .footer-brand span {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--cyan);
+        }
+
+        .pulse-footer h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .95rem;
+            color: var(--text);
+            margin-bottom: .9rem;
+        }
+
+        .pulse-footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pulse-footer ul li {
+            margin-bottom: .5rem;
+        }
+
+        .pulse-footer ul a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: .88rem;
+        }
+
+        .pulse-footer ul a:hover {
+            color: var(--cyan);
+        }
+
+        .pulse-footer .social-links {
+            display: flex;
+            gap: .7rem;
+            margin-bottom: 1rem;
+        }
+
+        .pulse-footer .social-links a {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .pulse-footer .social-links a:hover {
+            border-color: var(--violet);
+            color: var(--violet);
+        }
+
+        .pulse-footer .visit-message {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            letter-spacing: .06em;
+            color: var(--cyan);
+            margin: 0;
+        }
+
+        .pulse-footer hr {
+            border-color: var(--line);
+            margin: 2rem 0 1.2rem;
+        }
+
+        .pulse-footer .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .5rem;
+            font-size: .8rem;
+        }
+
+        @media (max-width: 576px) {
+
+            .match-card {
+                flex-wrap: wrap;
+            }
+
+            .teams {
+                font-size: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-img {
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top pulse-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="images/pulse-logo.png" alt="Pulse Esports logo" class="brand-logo">
+                <span>PULSE ESPORTS</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pulseNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="pulseNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="schedule.html">Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rankings.html">Rankings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="teams.html">Teams</a></li>
+                    <li class="nav-item"><a class="nav-link" href="analysis.html">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sponsor.html">Sponsors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+                    <li class="nav-item"><a class="nav-link merch-link" href="merch.html">Merch</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container position-relative">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <img src="images/esports-banner.jpg" class="img-fluid rounded hero-img"
+                        alt="Esports Tournament">
+                </div>
+
+                <div class="col-md-4">
+                    <img src="images/esports-players.jpg" class="img-fluid rounded hero-img"
+                        alt="Esports Players">
+                </div>
+            </div>
+            <div class="eyebrow">// FALL CIRCUIT 2026</div>
+            <div class="row align-items-start g-4">
+                <div class="col-lg-8">
+                    <h1 class="display">Match Schedule</h1>
+                    <p>Every bracket, every server, one calendar. Bookmark a match and it stays saved on this device — even
+                        after you close the tab.</p>
+
+                    <div class="day-tabs" id="dayTabs">
+                        <button class="day-tab" data-day="fri">FRI <span class="sub">AUG 14</span></button>
+                        <button class="day-tab" data-day="sat">SAT <span class="sub">AUG 15</span></button>
+                        <button class="day-tab" data-day="sun">SUN <span class="sub">AUG 16</span></button>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="live-clock-card">
+                        <div class="live-clock-label"><span class="dot"></span>Local Time</div>
+                        <div class="live-clock-time" id="liveClock">--:--:--</div>
+                        <div class="live-clock-date" id="liveDate">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="match-section">
+        <div class="container">
+            <div class="section-label" id="dayHeading">Friday — Group Stage</div>
+            <div id="matchList"></div>
+        </div>
+    </main>
+
+    <footer class="pulse-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <div class="footer-brand">
+                        <img src="images/pulse-logo.png" alt="Pulse Esports logo">
+                        <span>PULSE ESPORTS</span>
+                    </div>
+                    <p>A student esports community built around competition, teamwork and gaming culture.</p>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="schedule.html">Schedule</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="teams.html">Teams</a></li>
+                        <li><a href="analysis.html">Analysis</a></li>
+                        <li><a href="sponsor.html">Sponsors</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="merch.html">Merch</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Pulse Esports Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" aria-label="Pulse Esports Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Pulse Esports Discord"><i class="fa-brands fa-discord"></i></a>
+                        <a href="#" aria-label="Pulse Esports YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                    <p class="visit-message" id="sessionCounter"></p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Pulse Esports Club. All rights reserved.</p>
+                <p>UCCD2323 Front-End Web Development</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ---- Live clock ----
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const date = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            document.getElementById('liveClock').textContent = time;
+            document.getElementById('liveDate').textContent = date;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        $(function () {
+
+            // ---- Match data (would come from a backend / CMS in production) ----
+            const SCHEDULE = {
+                fri: {
+                    label: "Friday — Group Stage",
+                    matches: [
+                        { id: "f1", time: "18:00", zone: "GMT+8", game: "Valorant", teamA: "Nexus Vanguard", teamB: "Iron Serpents", live: true },
+                        { id: "f2", time: "19:30", zone: "GMT+8", game: "Mobile Legends", teamA: "Crimson Owls", teamB: "Static Wolves", live: false },
+                        { id: "f3", time: "21:00", zone: "GMT+8", game: "League of Legends", teamA: "Obsidian Reach", teamB: "Voltbreakers", live: false }
+                    ]
+                },
+                sat: {
+                    label: "Saturday — Quarterfinals",
+                    matches: [
+                        { id: "s1", time: "14:00", zone: "GMT+8", game: "Valorant", teamA: "Nexus Vanguard", teamB: "Crimson Owls", live: false },
+                        { id: "s2", time: "16:00", zone: "GMT+8", game: "League of Legends", teamA: "Obsidian Reach", teamB: "Iron Serpents", live: false },
+                        { id: "s3", time: "18:30", zone: "GMT+8", game: "Mobile Legends", teamA: "Static Wolves", teamB: "Voltbreakers", live: false }
+                    ]
+                },
+                sun: {
+                    label: "Sunday — Grand Final",
+                    matches: [
+                        { id: "u1", time: "17:00", zone: "GMT+8", game: "Valorant", teamA: "TBD", teamB: "TBD", live: false },
+                        { id: "u2", time: "19:00", zone: "GMT+8", game: "Mobile Legends", teamA: "TBD", teamB: "TBD", live: false }
+                    ]
+                }
+            };
+
+            const FAV_KEY = "pulse_favorite_matches";      // localStorage: persists across visits
+            const TAB_KEY = "pulse_last_tab";               // sessionStorage: only for this browser session
+            const VIEW_KEY = "pulse_session_views";          // sessionStorage: demo counter
+            const VISIT_COOKIE = "pulse_visited";            // cookie: tracks return visits, expires in 30 days
+
+            // ---- Cookie helpers ----
+            function setCookie(name, value, days) {
+                const expires = new Date(Date.now() + days * 864e5).toUTCString();
+                document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+            }
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? decodeURIComponent(match[2]) : null;
+            }
+
+            function getFavorites() {
+                return JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
+            }
+            function toggleFavorite(matchId) {
+                let favs = getFavorites();
+                if (favs.includes(matchId)) {
+                    favs = favs.filter(id => id !== matchId);
+                } else {
+                    favs.push(matchId);
+                }
+                localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+                return favs;
+            }
+
+            function renderDay(day) {
+                const data = SCHEDULE[day];
+                const favs = getFavorites();
+                $("#dayHeading").text(data.label);
+
+                if (!data.matches.length) {
+                    $("#matchList").html('<div class="empty-state">No matches scheduled yet.</div>');
+                    return;
+                }
+
+                const html = data.matches.map(m => `
+      <div class="match-card">
+        <div class="match-time">${m.time}<span class="zone">${m.zone}</span></div>
+        <div class="match-meta">
+          <div class="match-game">${m.game}</div>
+          <div class="teams">${m.teamA}<span class="vs">vs</span>${m.teamB}</div>
+          ${m.live ? '<span class="live-badge"><span class="dot"></span>LIVE NOW</span>' : ''}
+        </div>
+        <button class="fav-btn ${favs.includes(m.id) ? 'saved' : ''}" data-id="${m.id}" aria-label="Save match to my schedule" title="Save to my schedule">
+          ${favs.includes(m.id) ? '★' : '☆'}
+        </button>
+      </div>
+    `).join("");
+
+                $("#matchList").html(html);
+            }
+
+            // Favorite button clicks
+            $("#matchList").on("click", ".fav-btn", function () {
+                const id = $(this).data("id");
+                const favs = toggleFavorite(id);
+                $(this).toggleClass("saved", favs.includes(id));
+                $(this).html(favs.includes(id) ? "★" : "☆");
+            });
+
+            // Day tab clicks
+            $("#dayTabs").on("click", ".day-tab", function () {
+                const day = $(this).data("day");
+                $(".day-tab").removeClass("active");
+                $(this).addClass("active");
+                sessionStorage.setItem(TAB_KEY, day);   // remember choice for THIS browser session only
+                renderDay(day);
+            });
+
+            // Restore last-viewed tab from sessionStorage, default to Friday
+            const savedDay = sessionStorage.getItem(TAB_KEY) || "fri";
+            $(`.day-tab[data-day="${savedDay}"]`).addClass("active");
+            renderDay(savedDay);
+
+            // Simple session view counter (sessionStorage — resets when the tab/browser session ends)
+            const views = parseInt(sessionStorage.getItem(VIEW_KEY) || "0", 10) + 1;
+            sessionStorage.setItem(VIEW_KEY, views);
+
+            // Cookie-based return-visit tracker (persists 30 days, separate from sessionStorage/localStorage)
+            const lastVisit = getCookie(VISIT_COOKIE);
+            if (lastVisit) {
+                $("#sessionCounter").text(`Welcome back! Last visit: ${lastVisit} · Session pages viewed: ${views}`);
+            } else {
+                $("#sessionCounter").text(`First visit today · Session pages viewed: ${views}`);
+            }
+            setCookie(VISIT_COOKIE, new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }), 30);
+
+        });
+    </script>
+</body>
+
+</html>

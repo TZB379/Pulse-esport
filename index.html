@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pulse Esports Club</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/mainpage.css">
+
+    <!-- Site-wide font pairing (Option 1): Rajdhani for headings, Inter for body, JetBrains Mono for stats/labels -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                linear-gradient(rgba(11, 14, 20, .88), rgba(11, 14, 20, .93)),
+                url("images/bg-nebula.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        h1, h2, h3, h4, h5, h6,
+        .hero-title, .section-title, .highlight-title, .brand-name,
+        .navbar-brand span, .footer-brand span { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+        .eyebrow, .section-label, .countdown-item strong, .countdown-item span { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top pulse-navbar">
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="images/pulse-logo.png" alt="Pulse Esports logo" class="brand-logo">
+
+                <span>PULSE ESPORTS</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pulseNavbar">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="pulseNavbar">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="schedule.html">
+                            Schedule
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="rankings.html">
+                            Rankings
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="teams.html">
+                            Teams
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="analysis.html">
+                            Analysis
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sponsor.html">
+                            Sponsors
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">
+                            Register
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link merch-link" href="merch.html">
+                            Merch
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+
+    <header class="hero-section">
+
+        <div class="hero-overlay"></div>
+
+        <div class="container hero-content">
+            <div class="row align-items-center min-vh-100">
+
+                <div class="col-lg-7">
+
+                    <p class="eyebrow">WELCOME TO THE ARENA</p>
+
+                    <h1 class="hero-title">
+                        PULSE ESPORTS
+                    </h1>
+
+                    <p class="hero-tagline">
+                        Play and Fight for your dream! 
+                    </p>
+
+                    <p class="hero-description">
+                        Pulse Esports Club brings all the pro player,
+                        newbie gamers and normal player to this arena.Through tournaments,
+                        Lets get RANKING for them!
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="schedule.html" class="btn btn-pulse-primary">
+                            View Match Schedule
+                        </a>
+
+                        <a href="#club-intro" class="btn btn-pulse-outline">
+                            Discover the Club
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section id="club-intro" class="section-space intro-section">
+            <div class="container">
+
+                <div class="row align-items-center g-5">
+
+                    <div class="col-lg-6">
+
+                        <p class="section-label">ABOUT PULSE</p>
+
+                        <h2 class="section-title">
+                            This is just a Gaming Club
+                        </h2>
+
+                        <p class="section-text">
+                            Gather of all player that have a dream to join tournaments.
+                            Although they might got a low ranking
+                        </p>
+
+                        <p class="section-text">
+                            The club that gives students opportunities to develop
+                            teamwork, communication and competitive skills while
+                            connecting with other people who share the same interest
+                            in gaming and esports.
+                        </p>
+
+                        <a href="schedule.html" class="text-link">
+                            Explore upcoming matches
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-lg-6">
+
+                        <div class="intro-image-wrap">
+                            <img src="images/esports-players.jpg" alt="Esports players competing together"
+                                class="img-fluid intro-image">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <section class="section-space access-section">
+            <div class="container">
+
+                <div class="text-center section-heading">
+                    <p class="section-label">EXPLORE THE CLUB</p>
+
+                    <h2 class="section-title">
+                        Everything in One Place.
+                    </h2>
+
+                    <p class="section-description">
+                        Use the main page to quickly access Pulse Esports
+                        competitions, standings, players and merchandise.
+                    </p>
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6 col-xl-3">
+                        <a href="schedule.html" class="access-card-link">
+
+                            <article class="access-card h-100">
+                                <div class="access-icon">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+
+                                <h3>Match Schedule</h3>
+
+                                <p>
+                                    Check upcoming fixtures, match times and
+                                    competition dates.
+                                </p>
+
+                                <span>
+                                    View Schedule
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </article>
+
+                        </a>
+                    </div>
+
+
+                    <div class="col-md-6 col-xl-3">
+                        <a href="rankings.html" class="access-card-link">
+
+                            <article class="access-card h-100">
+                                <div class="access-icon">
+                                    <i class="fa-solid fa-ranking-star"></i>
+                                </div>
+
+                                <h3>Team Rankings</h3>
+
+                                <p>
+                                    Check whether the team you like at which ranking!
+                                </p>
+
+                                <span>
+                                    View Rankings
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </article>
+
+                        </a>
+                    </div>
+
+
+                    <div class="col-md-6 col-xl-3">
+                        <a href="teams.html" class="access-card-link">
+
+                            <article class="access-card h-100">
+                                <div class="access-icon">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+
+                                <h3>Teams</h3>
+
+                                <p>
+                                    Choose your FAVOURITE TEAMS and see
+                                    which team will be the TOP st1 !
+                                </p>
+
+                                <span>
+                                    View Teams
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </article>
+
+                        </a>
+                    </div>
+
+
+                    <div class="col-md-6 col-xl-3">
+                        <a href="merch.html" class="access-card-link">
+
+                            <article class="access-card h-100">
+                                <div class="access-icon">
+                                    <i class="fa-solid fa-shirt"></i>
+                                </div>
+
+                                <h3>Merch Store</h3>
+
+                                <p>
+                                    Buy anything you need with a price
+                                    higher than outside
+                                </p>
+
+                                <span>
+                                    Shop Merch
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </article>
+
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="section-space games-section">
+            <div class="container">
+
+                <div class="row align-items-end mb-4">
+
+                    <div class="col-lg-8">
+
+                        <p class="section-label">FEATURED TITLES</p>
+
+                        <h2 class="section-title mb-2">
+                            Games that we got
+                        </h2>
+
+                        <p class="section-description mb-0">
+                            The titles you might interest as well....
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-6 col-lg-3">
+                        <button class="game-choice" type="button" data-game="Valorant"
+                            aria-label="Select Valorant as favourite game">
+                            <img src="images/valorant-logo.png" alt="Valorant logo">
+                            <span>Valorant</span>
+                        </button>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <button class="game-choice" type="button" data-game="MLBB"
+                            aria-label="Select Mobile Legends Bang Bang as favourite game">
+                            <img src="images/mlbb-logo.png" alt="Mobile Legends Bang Bang logo">
+                            <span>MLBB</span>
+                        </button>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <button class="game-choice" type="button" data-game="League of Legends"
+                            aria-label="Select League of Legends as favourite game">
+                            <img src="images/lol-logo.png" alt="League of Legends logo">
+                            <span>League of Legends</span>
+                        </button>
+                    </div>
+
+
+                    <div class="col-6 col-lg-3">
+                        <button class="game-choice" type="button" data-game="Competitive FPS"
+                            aria-label="Select competitive FPS as favourite game">
+                            <img src="images/gaming-setup.jpg" alt="Competitive gaming setup" class="game-cover">
+                            <span>Competitive FPS</span>
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <p id="preferenceNote" class="preference-note" aria-live="polite">
+                    Select your favourite game to personalise your visit.
+                </p>
+
+            </div>
+        </section>
+
+
+        <section class="section-space highlight-section">
+            <div class="container">
+
+                <div class="highlight-panel">
+
+                    <div class="row align-items-center g-4">
+
+                        <div class="col-lg-8">
+
+                            <p class="section-label mb-2">
+                                NEXT COMPETITIVE EVENT
+                            </p>
+
+                            <h2 class="highlight-title">
+                                Pulse Championship Weekend
+                            </h2>
+
+                            <p class="highlight-text">
+                                Follow the latest match schedule and see which
+                                teams are fighting for the top ranking.
+                            </p>
+
+                            <div id="countdown" class="countdown-grid">
+                                <div class="countdown-item">
+                                    <strong id="days">00</strong>
+                                    <span>Days</span>
+                                </div>
+
+                                <div class="countdown-item">
+                                    <strong id="hours">00</strong>
+                                    <span>Hours</span>
+                                </div>
+
+                                <div class="countdown-item">
+                                    <strong id="minutes">00</strong>
+                                    <span>Minutes</span>
+                                </div>
+
+                                <div class="countdown-item">
+                                    <strong id="seconds">00</strong>
+                                    <span>Seconds</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-lg-4 text-lg-end">
+
+                            <a href="schedule.html" class="btn btn-pulse-primary">
+                                Open Schedule
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="section-space merch-preview-section">
+            <div class="container">
+
+                <div class="row align-items-center g-5">
+
+                    <div class="col-lg-6">
+
+                        <img src="images/gaming-setup.jpg" alt="Pulse Esports gaming setup"
+                            class="img-fluid merch-preview-image">
+
+                    </div>
+
+
+                    <div class="col-lg-6">
+
+                        <p class="section-label">PULSE MERCH</p>
+
+                        <h2 class="section-title">
+                            Represent the Community
+                        </h2>
+
+                        <p class="section-text">
+                            Just buy it. Don't think too much.
+                            Spend it!
+                        </p>
+
+                        <a href="merch.html" class="btn btn-pulse-outline">
+                            Visit Merch Store
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <section class="community-section">
+            <div class="container text-center">
+
+                <p class="section-label">JOIN THE PULSE</p>
+
+                <h2>
+                    Ready for Your Next Match?
+                </h2>
+
+                <p>
+                    Explore our events, follow the rankings and become
+                    part of the Pulse Esports community.
+                </p>
+
+                <div class="community-actions">
+                    <a href="schedule.html" class="btn btn-light">
+                        Explore Matches
+                    </a>
+
+                    <a href="rankings.html" class="btn btn-pulse-dark">
+                        View Rankings
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <footer class="pulse-footer">
+        <div class="container">
+
+            <div class="row g-4">
+
+                <div class="col-md-5">
+
+                    <div class="footer-brand">
+                        <img src="images/pulse-logo.png" alt="Pulse Esports logo">
+
+                        <span>PULSE ESPORTS</span>
+                    </div>
+
+                    <p>
+                        A student esports community built around
+                        competition, teamwork and gaming culture.
+                    </p>
+
+                </div>
+
+
+                <div class="col-6 col-md-3">
+
+                    <h3>Explore</h3>
+
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="schedule.html">Schedule</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="teams.html">Teams</a></li>
+                        <li><a href="analysis.html">Analysis</a></li>
+                        <li><a href="sponsor.html">Sponsors</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="merch.html">Merch</a></li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2026 Pulse Esports Club. All rights reserved.
+                </p>
+
+                <p>
+                    UCCD2323 Front-End Web Development
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js">
+    </script>
+
+    <script src="js/mainpage.js"></script>
+
+</body>
+
+</html>

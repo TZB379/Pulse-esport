@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Rankings — Pulse Esports Club</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+  :root{
+    --bg:#0B0E14;
+    --panel:#151A24;
+    --panel-2:#1C2230;
+    --line:#262E3F;
+    --text:#EDEFF4;
+    --muted:#8A93A6;
+    --violet:#7C5CFC;
+    --cyan:#2FE6D1;
+    --amber:#FFB020;
+    --gold:#F5C542;
+    --silver:#C7CEDA;
+    --bronze:#D98E4F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:
+      linear-gradient(rgba(11,14,20,.88), rgba(11,14,20,.93)),
+      url("images/bg-nebula.jpg");
+    background-size:cover; background-position:center; background-attachment:fixed;
+    color:var(--text); font-family:'Inter',sans-serif; margin:0; min-height:100vh;
+  }
+  .display{font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:.02em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  .pulse-navbar{min-height:76px; background:rgba(11,14,20,.90); border-bottom:1px solid var(--line); backdrop-filter:blur(10px);}
+  .navbar-brand{color:var(--text)!important; font-weight:800; letter-spacing:.06rem;}
+  .brand-logo{width:42px;height:42px;object-fit:contain;}
+  .pulse-navbar .nav-link{position:relative; margin-left:8px; color:#d4d9e5!important; font-weight:600;}
+  .pulse-navbar .nav-link:hover, .pulse-navbar .nav-link.active{color:var(--cyan)!important;}
+  .pulse-navbar .nav-link::after{content:""; position:absolute; left:50%; bottom:3px; width:0; height:2px; background:var(--cyan); transform:translateX(-50%); transition:width .25s ease;}
+  .pulse-navbar .nav-link:hover::after, .pulse-navbar .nav-link.active::after{width:55%;}
+  .pulse-navbar .merch-link{margin-left:14px; padding-left:18px!important; padding-right:18px!important; border:1px solid rgba(47,230,209,.6); border-radius:6px;}
+
+  .hero{padding:3.5rem 0 2rem; border-bottom:1px solid var(--line); position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; inset:0;
+    background:radial-gradient(600px 260px at 85% 0%, rgba(124,92,252,.18), transparent 70%),
+               radial-gradient(500px 240px at 10% 40%, rgba(47,230,209,.1), transparent 70%);
+    pointer-events:none;}
+  .hero-img{max-height:220px; width:100%; object-fit:cover;}
+  .hero-img-contain{object-fit:contain; background:var(--panel);}
+  .eyebrow{color:var(--cyan); font-family:'JetBrains Mono',monospace; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; margin-top:1.75rem;}
+  .hero h1{font-size:2.6rem; margin:.4rem 0 .5rem;}
+  .hero p{color:var(--muted); max-width:560px;}
+
+  @media (max-width: 576px){
+    .hero-img{max-height:150px;}
+  }
+
+  .status-line{
+    font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--muted);
+    margin-top:1.25rem; display:flex; align-items:center; gap:.5rem;
+  }
+
+  /* Quick stats bar — fills the gap between hero and podium */
+  .stats-bar{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem;
+    margin-top:2.2rem;
+  }
+  .stat-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:1.2rem 1.3rem;
+  }
+  .stat-box-value{
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:2rem; line-height:1;
+    color:var(--text);
+  }
+  .stat-box-label{
+    font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); margin-top:.4rem;
+  }
+  @media (max-width: 767px){
+    .stats-bar{grid-template-columns:repeat(2, 1fr);}
+  }
+
+  /* Game badges — logo on top, name below. Uses your own logo files in images/ */
+  .game-badges{display:flex; gap:1.6rem; margin-top:1.6rem; flex-wrap:wrap; justify-content:center;}
+  .game-badge{
+    display:flex; flex-direction:column; align-items:center; gap:.9rem;
+    font-family:'JetBrains Mono',monospace; font-size:1rem; font-weight:700;
+    letter-spacing:.05em; padding:2rem 2.6rem; border-radius:16px;
+    border:1px solid var(--line); color:var(--text);
+    background:var(--panel);
+    min-width:210px;
+  }
+  .game-badge-icon{width:88px; height:88px; object-fit:contain; border-radius:12px;}
+  .game-badge.valorant{border-color:rgba(255,70,85,.4); color:#FF6B78;}
+  .game-badge.mlbb{border-color:rgba(255,176,32,.4); color:var(--amber);}
+  .game-badge.lol{border-color:rgba(124,92,252,.4); color:var(--violet);}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);}
+  .status-dot.error{background:#FF5C5C;}
+
+  /* Loading skeletons — shown while the API call is in flight */
+  @keyframes skeleton-pulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+  .skeleton{background:var(--panel-2); border-radius:8px; animation:skeleton-pulse 1.3s ease-in-out infinite;}
+  .skel-podium-card{
+    width:160px; height:170px; border-radius:14px;
+    background:var(--panel); border:1px solid var(--line);
+  }
+  .skel-lb-card{
+    height:190px; border-radius:18px;
+    background:var(--panel); border:1px solid var(--line);
+    margin-bottom:1.1rem;
+  }
+  @media (prefers-reduced-motion: reduce){ .skeleton{animation:none;} }
+
+  /* Podium */
+  .podium-section{padding:2rem 0 0;}
+  .podium{display:flex; align-items:flex-end; gap:1rem; justify-content:center; flex-wrap:wrap;}
+  .podium-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:1.2rem 1.4rem; text-align:center; width:160px;
+    position:relative;
+  }
+  .podium-card.rank1{order:2; border-color:rgba(245,197,66,.5); padding-top:1.6rem;}
+  .podium-card.rank2{order:1;}
+  .podium-card.rank3{order:3;}
+  .rank-medal{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.6rem;}
+  .rank1 .rank-medal{color:var(--gold);}
+  .rank2 .rank-medal{color:var(--silver);}
+  .rank3 .rank-medal{color:var(--bronze);}
+
+  /* Neon glow ring behind each podium logo */
+  .podium-emblem-wrap{
+    position:relative;
+    width:76px; height:76px;
+    margin:.6rem auto .3rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .podium-emblem-wrap::before{
+    content:"";
+    position:absolute; inset:-10px;
+    border-radius:50%;
+    filter:blur(14px);
+    opacity:.75;
+    z-index:0;
+  }
+  .rank1 .podium-emblem-wrap::before{background:radial-gradient(circle, rgba(245,197,66,.85), transparent 70%);}
+  .rank2 .podium-emblem-wrap::before{background:radial-gradient(circle, rgba(199,206,218,.75), transparent 70%);}
+  .rank3 .podium-emblem-wrap::before{background:radial-gradient(circle, rgba(217,142,79,.8), transparent 70%);}
+  .podium-emblem{
+    position:relative; z-index:1;
+    width:64px; height:64px; border-radius:50%;
+    object-fit:cover;
+    background:var(--panel-2);
+    box-shadow:0 0 0 2px rgba(255,255,255,.06);
+  }
+  .rank1 .podium-emblem{box-shadow:0 0 0 2px rgba(245,197,66,.6);}
+  .rank2 .podium-emblem{box-shadow:0 0 0 2px rgba(199,206,218,.5);}
+  .rank3 .podium-emblem{box-shadow:0 0 0 2px rgba(217,142,79,.6);}
+
+  .emblem-fallback{
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--violet), #5B3FE0);
+    font-family:'Rajdhani',sans-serif; font-weight:700; color:#fff;
+  }
+  .lb-emblem.emblem-fallback{font-size:1.5rem;}
+  .podium-emblem.emblem-fallback{font-size:1.2rem;}
+
+  .podium-team{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.05rem; margin:.4rem 0 .1rem;}
+  .podium-pts{color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:.8rem;}
+
+  /* Leaderboard table */
+  .board-section{padding:2.5rem 0 5rem;}
+  .section-label{font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; margin:0 0 .9rem; display:flex; align-items:center; gap:.6rem;}
+  .section-label::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  /* Big ranking cards */
+  .leaderboard{display:flex; flex-direction:column; gap:1.1rem;}
+  .lb-card{
+    position:relative;
+    border-radius:18px; overflow:hidden;
+    border:1px solid var(--line);
+    padding:1.6rem 1.7rem;
+    min-height:190px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    background:
+      radial-gradient(420px 260px at 88% 15%, rgba(124,92,252,.10), transparent 65%),
+      linear-gradient(135deg, #1A1F2C 0%, #0F1219 75%);
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .lb-card:hover{transform:translateY(-2px); border-color:#3A4258;}
+  .lb-card.rank-1{border-color:rgba(245,197,66,.45);}
+  .lb-card.rank-2{border-color:rgba(199,206,218,.35);}
+  .lb-card.rank-3{border-color:rgba(217,142,79,.4);}
+
+  .lb-pos-badge{
+    position:absolute; top:0; right:0;
+    padding:.6rem 1.3rem .55rem 1.6rem;
+    border-bottom-left-radius:16px;
+    font-family:'Rajdhani',sans-serif;
+    text-align:center;
+    background:linear-gradient(135deg,#2A3142,#1C2230);
+  }
+  .lb-pos-badge.g1{background:linear-gradient(135deg,#F5C542,#B8862A);}
+  .lb-pos-badge.g2{background:linear-gradient(135deg,#C7CEDA,#8A93A6);}
+  .lb-pos-badge.g3{background:linear-gradient(135deg,#D98E4F,#8F5722);}
+  .lb-pos-label{font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(11,14,20,.65); font-weight:700; display:block;}
+  .lb-pos-badge:not(.g1):not(.g2):not(.g3) .lb-pos-label{color:var(--muted);}
+  .lb-pos-num{font-size:1.7rem; font-weight:700; line-height:1; color:#0B0E14;}
+  .lb-pos-badge:not(.g1):not(.g2):not(.g3) .lb-pos-num{color:var(--text);}
+
+  .lb-top{display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-right:5.5rem;}
+  .lb-club-label{font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.15rem;}
+  .lb-club-name{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.7rem; line-height:1.1;}
+  .lb-attending{display:flex; align-items:center; gap:.4rem; color:var(--muted); font-size:.85rem; margin-top:.5rem;}
+
+  .lb-emblem{
+    width:78px; height:78px; border-radius:14px; flex-shrink:0;
+    object-fit:cover; background:var(--panel-2);
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+
+  .lb-stats{display:flex; gap:2.2rem; margin-top:1.3rem; align-items:flex-end;}
+  .lb-stat-label{font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:.15rem;}
+  .lb-stat-value{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.6rem;}
+  .lb-trend-inline{display:inline-flex; align-items:center; gap:.3rem; margin-left:.5rem; font-size:1rem; vertical-align:middle;}
+  .trend-up{color:var(--cyan);}
+  .trend-down{color:#FF5C5C;}
+  .trend-flat{color:var(--muted);}
+
+  .star-btn{
+    background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:9px;
+    color:var(--muted); font-size:1.05rem; cursor:pointer; width:38px; height:38px; flex-shrink:0;
+  }
+  .star-btn.active{color:var(--amber); border-color:rgba(255,176,32,.4);}
+  .star-btn:focus-visible{outline:2px solid var(--cyan); outline-offset:2px;}
+
+  /* Share panel */
+  .share-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:1.3rem 1.4rem; margin-top:1.5rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+  }
+  .share-panel p{margin:0; color:var(--muted); font-size:.9rem;}
+  .share-btn{
+    display:inline-flex; align-items:center; gap:.4rem;
+    border:1px solid var(--line); border-radius:9px; padding:.5rem .9rem;
+    color:var(--text); text-decoration:none; font-size:.85rem; font-weight:500;
+    transition:border-color .15s ease;
+  }
+  .share-btn:hover{border-color:var(--violet); color:var(--text);}
+
+  /* Embedded X/Twitter timeline widget — wraps the injected iframe in our own panel styling */
+  .social-embed-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:1rem; overflow:hidden;
+  }
+
+  /* Fallback shown if X's widget script is blocked (network/ad-blocker) */
+  .social-fallback{padding:.5rem;}
+  .social-fallback-note{
+    font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--muted);
+    margin-bottom:1rem;
+  }
+  .mock-post{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:12px;
+    padding:1rem 1.1rem; margin-bottom:.8rem;
+  }
+  .mock-post-head{display:flex; align-items:center; gap:.6rem; margin-bottom:.5rem;}
+  .mock-post-avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg,var(--violet),var(--cyan));
+    flex-shrink:0;
+  }
+  .mock-post-name{font-weight:600; font-size:.88rem;}
+  .mock-post-handle{color:var(--muted); font-size:.8rem;}
+  .mock-post-text{font-size:.88rem; line-height:1.5; color:var(--text);}
+  .mock-post-tag{color:var(--cyan);}
+  .social-fallback-cta{
+    display:inline-flex; align-items:center; gap:.4rem;
+    color:var(--cyan); font-size:.85rem; text-decoration:none; font-weight:600;
+    margin-top:.4rem;
+  }
+  .social-fallback-cta:hover{text-decoration:underline;}
+
+  footer.pulse-footer{background:#070a10; border-top:1px solid var(--line); padding:3rem 0 1.5rem; color:var(--muted); font-size:.9rem;}
+  .pulse-footer .footer-brand{display:flex; align-items:center; gap:.6rem; margin-bottom:.8rem;}
+  .pulse-footer .footer-brand img{width:34px; height:34px; object-fit:contain; border-radius:6px;}
+  .pulse-footer .footer-brand span{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.1rem; color:var(--cyan);}
+  .pulse-footer h3{font-family:'Rajdhani',sans-serif; font-weight:700; font-size:.95rem; color:var(--text); margin-bottom:.9rem;}
+  .pulse-footer ul{list-style:none; padding:0; margin:0;}
+  .pulse-footer ul li{margin-bottom:.5rem;}
+  .pulse-footer ul a{color:var(--muted); text-decoration:none; font-size:.88rem;}
+  .pulse-footer ul a:hover{color:var(--cyan);}
+  .pulse-footer .social-links{display:flex; gap:.7rem; margin-bottom:1rem;}
+  .pulse-footer .social-links a{width:36px; height:36px; border-radius:8px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--muted); text-decoration:none;}
+  .pulse-footer .social-links a:hover{border-color:var(--violet); color:var(--violet);}
+  .pulse-footer .visit-message{font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.06em; color:var(--cyan); margin:0;}
+  .pulse-footer hr{border-color:var(--line); margin:2rem 0 1.2rem;}
+  .pulse-footer .footer-bottom{display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem; font-size:.8rem;}
+
+  @media (max-width: 576px){
+    .hero h1{font-size:2rem;}
+    .lb-top{padding-right:0; flex-wrap:wrap;}
+    .lb-stats{gap:1.4rem; flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top pulse-navbar">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="images/pulse-logo.png" alt="Pulse Esports logo" class="brand-logo">
+      <span>PULSE ESPORTS</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pulseNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="pulseNavbar">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
+        <li class="nav-item"><a class="nav-link active" href="rankings.html">Rankings</a></li>
+        <li class="nav-item"><a class="nav-link" href="teams.html">Teams</a></li>
+        <li class="nav-item"><a class="nav-link" href="analysis.html">Analysis</a></li>
+        <li class="nav-item"><a class="nav-link" href="sponsor.html">Sponsors</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+        <li class="nav-item"><a class="nav-link merch-link" href="merch.html">Merch</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container position-relative">
+    <div class="row g-3">
+      <div class="col-md-8">
+        <img src="images/trophy-podium.png" class="img-fluid rounded hero-img hero-img-contain" alt="Championship trophy">
+      </div>
+      <div class="col-md-4">
+        <img src="images/gaming-setup.jpg" class="img-fluid rounded hero-img" alt="RGB gaming setup">
+      </div>
+    </div>
+    <div class="eyebrow">// FALL CIRCUIT 2026 — STANDINGS</div>
+    <h1 class="display">Team Rankings</h1>
+    <p>Live standings across the group stage. Star a team to track them — your pick is remembered next time you visit.</p>
+    <div class="game-badges">
+      <span class="game-badge valorant">
+        <img class="game-badge-icon" src="images/valorant-logo.png" alt="Valorant" onerror="this.style.display='none'">
+        VALORANT
+      </span>
+      <span class="game-badge mlbb">
+        <img class="game-badge-icon" src="images/mlbb-logo.png" alt="Mobile Legends" onerror="this.style.display='none'">
+        MOBILE LEGENDS
+      </span>
+      <span class="game-badge lol">
+        <img class="game-badge-icon" src="images/lol-logo.png" alt="League of Legends" onerror="this.style.display='none'">
+        LEAGUE OF LEGENDS
+      </span>
+    </div>
+    <div class="status-line"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting to standings feed…</span></div>
+
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="stat-box-value">6</div>
+        <div class="stat-box-label">Teams Competing</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-value">19</div>
+        <div class="stat-box-label">Matches Played</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-value">3</div>
+        <div class="stat-box-label">Games Featured</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-value">658</div>
+        <div class="stat-box-label">Total CC Points</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="podium-section">
+  <div class="container">
+    <div class="podium" id="podium"></div>
+  </div>
+</section>
+
+<main class="board-section">
+  <div class="container">
+    <div class="section-label" style="margin-top:2.2rem;">Full Standings</div>
+    <div class="leaderboard" id="leaderboard"></div>
+
+    <div class="share-panel">
+      <p>Following the circuit? Share the live standings with your squad.</p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="share-btn" id="shareTwitter" href="#" target="_blank" rel="noopener">𝕏 Share on X</a>
+        <a class="share-btn" id="shareFacebook" href="#" target="_blank" rel="noopener">f Share on Facebook</a>
+        <a class="share-btn" id="shareWhatsapp" href="#" target="_blank" rel="noopener">☎ WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2.5rem;">Live from the Circuit — #Esports on X</div>
+    <div class="social-embed-panel" id="socialEmbedPanel">
+      <a class="twitter-timeline"
+         data-height="500"
+         data-theme="dark"
+         data-chrome="noheader nofooter noborders transparent"
+         href="https://twitter.com/hashtag/esports?src=hashtag_click">
+         Posts tagged #esports
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer class="pulse-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-5">
+        <div class="footer-brand">
+          <img src="images/pulse-logo.png" alt="Pulse Esports logo">
+          <span>PULSE ESPORTS</span>
+        </div>
+        <p>A student esports community built around competition, teamwork and gaming culture.</p>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="schedule.html">Schedule</a></li>
+          <li><a href="rankings.html">Rankings</a></li>
+          <li><a href="teams.html">Teams</a></li>
+          <li><a href="analysis.html">Analysis</a></li>
+          <li><a href="sponsor.html">Sponsors</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="merch.html">Merch</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-md-4">
+        <h3>Connect</h3>
+        <div class="social-links">
+          <a href="#" aria-label="Pulse Esports Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Pulse Esports Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Pulse Esports Discord"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" aria-label="Pulse Esports YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+        <p class="visit-message" id="sessionCounter">RANKINGS SESSION VIEW</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Pulse Esports Club. All rights reserved.</p>
+      <p>UCCD2323 Front-End Web Development</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- X (Twitter) official embed widget — renders the .twitter-timeline anchor above into a live feed -->
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+$(function () {
+
+  const FAV_TEAM_KEY = "pulse_favorite_team"; // localStorage: persists across visits
+  const VIEW_KEY = "pulse_session_views";      // sessionStorage: demo counter, same key as schedule.html
+  const VISIT_COOKIE = "pulse_visited";        // cookie: tracks return visits, expires in 30 days, same key as schedule.html
+
+  // ---- Cookie helpers ----
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  }
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+
+  // Base standings data (points, wins/losses, trend, logo file) that the club maintains locally.
+  const BASE_STANDINGS = [
+    { team:"Nexus Vanguard", wins:5, losses:0, pts:150, trend:"up",   tournaments:13, medals:4, logo:"nv-logo.png" },
+    { team:"Obsidian Reach", wins:4, losses:1, pts:132, trend:"up",   tournaments:11, medals:2, logo:"or-logo.png" },
+    { team:"Crimson Owls",   wins:4, losses:1, pts:128, trend:"flat", tournaments:14, medals:1, logo:"co-logo.png" },
+    { team:"Iron Serpents",  wins:3, losses:2, pts:104, trend:"down", tournaments:9,  medals:1, logo:"is-logo.png" },
+    { team:"Voltbreakers",   wins:2, losses:3, pts:86,  trend:"up",   tournaments:7,  medals:0, logo:"v-logo.png"  },
+    { team:"Static Wolves",  wins:1, losses:4, pts:58,  trend:"down", tournaments:6,  medals:0, logo:"sw-logo.png" }
+  ];
+
+  // If a logo file is missing, swap the broken image for a clean initials badge
+  // instead of letting the browser's alt-text overflow the circle.
+  window.handleLogoError = function (imgEl, team) {
+    const initials = team.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+    const isPodium = imgEl.classList.contains("podium-emblem");
+    const cls = isPodium ? "podium-emblem" : "lb-emblem";
+    const fallback = document.createElement("div");
+    fallback.className = cls + " emblem-fallback";
+    fallback.textContent = initials;
+    imgEl.replaceWith(fallback);
+  };
+
+  function emblemFor(team, logo) {
+    return `<img class="lb-emblem" src="images/${logo}" alt="${team} logo" onerror="handleLogoError(this, '${team}')">`;
+  }
+
+  function getFavoriteTeam() {
+    return localStorage.getItem(FAV_TEAM_KEY) || "";
+  }
+  function setFavoriteTeam(team) {
+    const current = getFavoriteTeam();
+    const next = current === team ? "" : team;
+    localStorage.setItem(FAV_TEAM_KEY, next);
+    return next;
+  }
+
+  function trendArrow(trend) {
+    if (trend === "up")   return '<span class="trend-up">▲</span>';
+    if (trend === "down") return '<span class="trend-down">▼</span>';
+    return '<span class="trend-flat">–</span>';
+  }
+
+  function showSkeletons() {
+    $("#podium").html(
+      Array(3).fill('<div class="skel-podium-card skeleton"></div>').join("")
+    );
+    $("#leaderboard").html(
+      Array(6).fill('<div class="skel-lb-card skeleton"></div>').join("")
+    );
+  }
+
+  function renderPodium(standings) {
+    const top3 = standings.slice(0, 3);
+    const order = [1, 0, 2]; // display as 2nd, 1st, 3rd
+    const html = order.map(i => {
+      const t = top3[i];
+      if (!t) return "";
+      const rankNum = i + 1;
+      return `
+        <div class="podium-card rank${rankNum}">
+          <div class="rank-medal">#${rankNum}</div>
+          <div class="podium-emblem-wrap">
+            <img class="podium-emblem" src="images/${t.logo}" alt="${t.team} logo" onerror="handleLogoError(this, '${t.team}')">
+          </div>
+          <div class="podium-team">${t.team}</div>
+          <div class="podium-pts">${t.pts} PTS</div>
+        </div>`;
+    }).join("");
+    $("#podium").html(html);
+  }
+
+  function renderLeaderboard(standings) {
+    const favTeam = getFavoriteTeam();
+    const html = standings.map((t, idx) => {
+      const rank = idx + 1;
+      const badgeClass = rank === 1 ? "g1" : rank === 2 ? "g2" : rank === 3 ? "g3" : "";
+      return `
+      <div class="lb-card rank-${rank}">
+        <div class="lb-pos-badge ${badgeClass}">
+          <span class="lb-pos-label">Position</span>
+          <span class="lb-pos-num">#${rank}</span>
+        </div>
+
+        <div class="lb-top">
+          <div class="d-flex gap-3">
+            ${emblemFor(t.team, t.logo)}
+            <div>
+              <div class="lb-club-label">Club</div>
+              <div class="lb-club-name">${t.team}</div>
+              <div class="lb-attending">👥 Tournaments Attending: ${t.tournaments}</div>
+            </div>
+          </div>
+          <button class="star-btn ${favTeam === t.team ? 'active' : ''}" data-team="${t.team}" aria-label="Follow ${t.team}" title="Follow this team">
+            ${favTeam === t.team ? '★' : '☆'}
+          </button>
+        </div>
+
+        <div class="lb-stats">
+          <div>
+            <div class="lb-stat-label">Medals Won</div>
+            <div class="lb-stat-value">${t.medals}</div>
+          </div>
+          <div>
+            <div class="lb-stat-label">Record</div>
+            <div class="lb-stat-value">${t.wins}W–${t.losses}L</div>
+          </div>
+          <div>
+            <div class="lb-stat-label">CC Points</div>
+            <div class="lb-stat-value">${t.pts}<span class="lb-trend-inline">${trendArrow(t.trend)}</span></div>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+    $("#leaderboard").html(html);
+  }
+
+  $("#leaderboard").on("click", ".star-btn", function () {
+    const team = $(this).data("team");
+    const nowFav = setFavoriteTeam(team);
+    $(".star-btn").removeClass("active").html("☆");
+    if (nowFav) {
+      $(this).addClass("active").html("★");
+    }
+  });
+
+  function setupShareLinks() {
+    const pageUrl = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Check out the live Pulse Esports Club standings 🏆");
+    $("#shareTwitter").attr("href", `https://twitter.com/intent/tweet?text=${text}&url=${pageUrl}`);
+    $("#shareFacebook").attr("href", `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`);
+    $("#shareWhatsapp").attr("href", `https://wa.me/?text=${text}%20${pageUrl}`);
+  }
+
+  // ---- Call a public RESTful API with jQuery to demonstrate live data retrieval ----
+  // JSONPlaceholder is a free public REST API. We use it to pull a set of "player"
+  // records and merge win/loss/points data from BASE_STANDINGS to build the live board.
+  $("#statusText").text("Connecting to standings feed…");
+  showSkeletons();
+  const skeletonStart = Date.now();
+  const MIN_SKELETON_MS = 900; // keeps the loading state visible long enough to actually see it
+
+  function afterMinDelay(fn) {
+    const elapsed = Date.now() - skeletonStart;
+    const wait = Math.max(0, MIN_SKELETON_MS - elapsed);
+    setTimeout(fn, wait);
+  }
+
+  $.ajax({
+    url: "https://jsonplaceholder.typicode.com/users",
+    method: "GET",
+    dataType: "json",
+    timeout: 6000
+  })
+  .done(function (apiData) {
+    // Merge: use the API only to prove the live call, keep our own points/trend data
+    const standings = BASE_STANDINGS.map((t, i) => ({
+      ...t,
+      captain: apiData[i] ? apiData[i].name : "—"
+    })).sort((a, b) => b.pts - a.pts);
+
+    afterMinDelay(function () {
+      $("#statusDot").removeClass("error");
+      $("#statusText").text(`Standings feed connected — captains synced from API (${apiData.length} records)`);
+      renderPodium(standings);
+      renderLeaderboard(standings);
+    });
+  })
+  .fail(function () {
+    // Fallback: still render from local data if the API call fails (e.g. offline)
+    const standings = [...BASE_STANDINGS].sort((a, b) => b.pts - a.pts);
+    afterMinDelay(function () {
+      $("#statusDot").addClass("error");
+      $("#statusText").text("Live feed unavailable — showing cached standings");
+      renderPodium(standings);
+      renderLeaderboard(standings);
+    });
+  });
+
+  setupShareLinks();
+
+  // ---- Cookie-based return-visit tracker + sessionStorage page-view counter ----
+  // Same keys as schedule.html, so "Session pages viewed" counts across both pages
+  // in the same tab, and "Last visit" reflects whichever Pulse page was opened last.
+  const views = parseInt(sessionStorage.getItem(VIEW_KEY) || "0", 10) + 1;
+  sessionStorage.setItem(VIEW_KEY, views);
+
+  const lastVisit = getCookie(VISIT_COOKIE);
+  if (lastVisit) {
+    $("#sessionCounter").text(`Welcome back! Last visit: ${lastVisit} · Session pages viewed: ${views}`);
+  } else {
+    $("#sessionCounter").text(`First visit today · Session pages viewed: ${views}`);
+  }
+  setCookie(VISIT_COOKIE, new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }), 30);
+
+  // ---- X widget fallback ----
+  // The official X embed (widgets.js) requires platform.twitter.com to be reachable —
+  // some networks/ad-blockers block it. If no iframe has been injected after a short
+  // wait, swap in a self-contained preview so the section never shows a raw broken link.
+  setTimeout(function () {
+    const $panel = $("#socialEmbedPanel");
+    const widgetLoaded = $panel.find("iframe").length > 0;
+
+    if (!widgetLoaded) {
+      $panel.html(`
+        <div class="social-fallback">
+          <div class="social-fallback-note">⚠ Live X widget unavailable on this network — showing a preview instead</div>
+
+          <div class="mock-post">
+            <div class="mock-post-head">
+              <div class="mock-post-avatar"></div>
+              <div>
+                <div class="mock-post-name">Pulse Esports Club</div>
+                <div class="mock-post-handle">@PulseEsports · 2h</div>
+              </div>
+            </div>
+            <div class="mock-post-text">Group stage kicks off this Friday! Nexus Vanguard opens against Iron Serpents at 18:00 GMT+8. <span class="mock-post-tag">#Esports</span> <span class="mock-post-tag">#FallCircuit2026</span></div>
+          </div>
+
+          <div class="mock-post">
+            <div class="mock-post-head">
+              <div class="mock-post-avatar"></div>
+              <div>
+                <div class="mock-post-name">Pulse Esports Club</div>
+                <div class="mock-post-handle">@PulseEsports · 5h</div>
+              </div>
+            </div>
+            <div class="mock-post-text">Standings are live on our Rankings page — Nexus Vanguard sits at #1 with 150 CC points. <span class="mock-post-tag">#Esports</span></div>
+          </div>
+
+          <a class="social-fallback-cta" href="https://twitter.com/hashtag/esports?src=hashtag_click" target="_blank" rel="noopener">
+            View live #Esports posts on X →
+          </a>
+        </div>
+      `);
+    }
+  }, 2500);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teams &amp; Players | Pulse Esports Club</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <!-- Site-wide font pairing (Option 1): Rajdhani for headings, Inter for body, JetBrains Mono for stats/labels -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/mainpage.css">
+
+    <style>
+      :root {
+        --bg: #0b0e14;
+        --panel: #151a24;
+        --panel-2: #1c2230;
+        --cyan: #2fe6d1;
+        --purple: #7b5cff;
+        --grey: #aab3c5;
+        --border: rgba(255, 255, 255, 0.1);
+        --gold: #f5c542;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(rgba(11, 14, 20, .88), rgba(11, 14, 20, .93)),
+          url("images/bg-nebula.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', Arial, Helvetica, sans-serif;
+      }
+
+      h1, h2, h3, h4, h5, h6, .team-name {
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+      }
+
+      .store-header p, .team-game {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .top-bar {
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .back-btn {
+        color: var(--cyan);
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .back-btn:hover {
+        color: white;
+      }
+
+      .store-header {
+        padding: 150px 20px 70px;
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(123, 92, 255, 0.18),
+          rgba(47, 230, 209, 0.08)
+        );
+      }
+
+      .store-header p {
+        color: var(--cyan);
+        letter-spacing: 3px;
+        font-weight: bold;
+      }
+
+      .store-header h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+      }
+
+      .store-header .description {
+        max-width: 650px;
+        margin: 15px auto 0;
+        color: var(--grey);
+        letter-spacing: normal;
+        font-weight: normal;
+      }
+
+      .teams-section {
+        padding: 60px 0;
+      }
+
+      .team-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 24px;
+        height: 100%;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .team-card:hover {
+        transform: translateY(-6px);
+        border-color: var(--cyan);
+      }
+
+      .team-card-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+
+      .team-logo {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        border-radius: 10px;
+        background: var(--panel-2);
+        padding: 6px;
+        flex-shrink: 0;
+      }
+
+      .team-name {
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 0;
+      }
+
+      .team-game {
+        color: var(--cyan);
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+
+      .team-record {
+        color: var(--grey);
+        font-size: 0.88rem;
+        margin: 10px 0 16px;
+      }
+
+      .fav-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--grey);
+        font-size: 1rem;
+        width: 38px;
+        height: 38px;
+        margin-left: auto;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .fav-btn.active {
+        color: var(--gold);
+        border-color: rgba(245, 197, 66, 0.5);
+      }
+
+      .roster-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--cyan);
+        background: none;
+        border: none;
+        font-weight: bold;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .roster-toggle .fa-chevron-down {
+        transition: transform 0.2s ease;
+      }
+
+      .roster-toggle.open .fa-chevron-down {
+        transform: rotate(180deg);
+      }
+
+      .roster-list {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+        display: none;
+      }
+
+      .roster-list.show {
+        display: block;
+      }
+
+      .player-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.92rem;
+      }
+
+      .player-row:last-child {
+        border-bottom: none;
+      }
+
+      .player-name {
+        font-weight: bold;
+      }
+
+      .player-role {
+        color: var(--grey);
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top pulse-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="images/pulse-logo.png" alt="Pulse Esports logo" class="brand-logo">
+                <span>PULSE ESPORTS</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pulseNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="pulseNavbar">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schedule.html">Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rankings.html">Rankings</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="teams.html">Teams</a></li>
+                    <li class="nav-item"><a class="nav-link" href="analysis.html">Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sponsor.html">Sponsors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+                    <li class="nav-item"><a class="nav-link merch-link" href="merch.html">Merch</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="store-header">
+      <p>MEET THE ROSTER</p>
+      <h1>TEAMS &amp; PLAYERS</h1>
+      <p class="description">
+        Six competitive squads carry the Pulse Esports banner across Valorant,
+        Mobile Legends and League of Legends. Tap a team to see the players
+        behind the standings, and follow your favourite — it stays starred on
+        the Rankings page too.
+      </p>
+    </header>
+
+    <section class="teams-section">
+      <div class="container">
+        <div class="row g-4" id="teamsGrid">
+          <!-- team cards are inserted here by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <footer class="pulse-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <div class="footer-brand">
+                        <img src="images/pulse-logo.png" alt="Pulse Esports logo">
+                        <span>PULSE ESPORTS</span>
+                    </div>
+                    <p>A student esports community built around competition, teamwork and gaming culture.</p>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="schedule.html">Schedule</a></li>
+                        <li><a href="rankings.html">Rankings</a></li>
+                        <li><a href="teams.html">Teams</a></li>
+                        <li><a href="analysis.html">Analysis</a></li>
+                        <li><a href="sponsor.html">Sponsors</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="merch.html">Merch</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Pulse Esports Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" aria-label="Pulse Esports Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Pulse Esports Discord"><i class="fa-brands fa-discord"></i></a>
+                        <a href="#" aria-label="Pulse Esports YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                    <p id="visitMessage" class="visit-message">TEAMS SESSION VIEW</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Pulse Esports Club. All rights reserved.</p>
+                <p>UCCD2323 Front-End Web Development</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/mainpage.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Same key rankings.html uses for the favourite-team star,
+        // so a favourite picked on either page shows up on both.
+        var FAV_TEAM_KEY = "pulse_favorite_team";
+
+        // Team data matches the six teams already shown on the
+        // Rankings page (same names, logos and game).
+        var teams = [
+          {
+            name: "Nexus Vanguard",
+            logo: "images/nv-logo.png",
+            game: "Valorant",
+            record: "5W - 0L",
+            players: [
+              { name: "ShadowStrike", role: "Duelist / IGL" },
+              { name: "Whisperfang", role: "Controller" },
+              { name: "IronPulse", role: "Sentinel" },
+            ],
+          },
+          {
+            name: "Obsidian Reach",
+            logo: "images/or-logo.png",
+            game: "Mobile Legends",
+            record: "4W - 1L",
+            players: [
+              { name: "DarkTide", role: "Jungler" },
+              { name: "SilentByte", role: "Mid Laner" },
+              { name: "GraniteWolf", role: "Support" },
+            ],
+          },
+          {
+            name: "Crimson Owls",
+            logo: "images/co-logo.png",
+            game: "League of Legends",
+            record: "4W - 1L",
+            players: [
+              { name: "EmberClaw", role: "Top Laner" },
+              { name: "NightFeather", role: "Jungler" },
+              { name: "RubyFlare", role: "ADC" },
+            ],
+          },
+          {
+            name: "Iron Serpents",
+            logo: "images/is-logo.png",
+            game: "Valorant",
+            record: "3W - 2L",
+            players: [
+              { name: "VenomEdge", role: "Duelist" },
+              { name: "CoilStrike", role: "Initiator" },
+              { name: "SteelFang", role: "Sentinel" },
+            ],
+          },
+          {
+            name: "Voltbreakers",
+            logo: "images/v-logo.png",
+            game: "Mobile Legends",
+            record: "2W - 3L",
+            players: [
+              { name: "ThunderArc", role: "Marksman" },
+              { name: "StaticPulse", role: "Support" },
+              { name: "AmpVolt", role: "Roamer" },
+            ],
+          },
+          {
+            name: "Static Wolves",
+            logo: "images/sw-logo.png",
+            game: "League of Legends",
+            record: "1W - 4L",
+            players: [
+              { name: "HowlingByte", role: "Mid Laner" },
+              { name: "FrostFang", role: "Support" },
+              { name: "GreyCircuit", role: "Top Laner" },
+            ],
+          },
+        ];
+
+        // -----------------------------------------------------------
+        // Reads the currently favourited team from localStorage.
+        // localStorage keeps its value even after the browser is
+        // closed, which is why it fits a "remember my favourite
+        // team for next time" feature (sessionStorage would forget
+        // it as soon as the tab closes).
+        // -----------------------------------------------------------
+        function getFavoriteTeam() {
+          return localStorage.getItem(FAV_TEAM_KEY) || "";
+        }
+
+        function setFavoriteTeam(team) {
+          var current = getFavoriteTeam();
+          var next = current === team ? "" : team;
+          localStorage.setItem(FAV_TEAM_KEY, next);
+          return next;
+        }
+
+        // -----------------------------------------------------------
+        // Builds one team card's HTML
+        // -----------------------------------------------------------
+        function buildCard(team, index) {
+          var favTeam = getFavoriteTeam();
+          var isFav = favTeam === team.name;
+
+          var playerRows = "";
+          for (var i = 0; i < team.players.length; i++) {
+            playerRows +=
+              '<div class="player-row">' +
+              '<span class="player-name">' +
+              team.players[i].name +
+              "</span>" +
+              '<span class="player-role">' +
+              team.players[i].role +
+              "</span>" +
+              "</div>";
+          }
+
+          var card =
+            '<div class="col-md-6 col-lg-4">' +
+            '<div class="team-card">' +
+            '<div class="team-card-head">' +
+            '<img class="team-logo" src="' +
+            team.logo +
+            '" alt="' +
+            team.name +
+            ' logo" onerror="this.style.display=\'none\'">' +
+            "<div>" +
+            '<p class="team-name">' +
+            team.name +
+            "</p>" +
+            '<span class="team-game">' +
+            team.game +
+            "</span>" +
+            "</div>" +
+            '<button class="fav-btn ' +
+            (isFav ? "active" : "") +
+            '" data-team="' +
+            team.name +
+            '" title="Favourite this team">' +
+            (isFav ? "&#9733;" : "&#9734;") +
+            "</button>" +
+            "</div>" +
+            '<p class="team-record">Record: ' +
+            team.record +
+            "</p>" +
+            '<button class="roster-toggle" data-index="' +
+            index +
+            '">' +
+            'View Roster <i class="fa-solid fa-chevron-down"></i>' +
+            "</button>" +
+            '<div class="roster-list" id="roster' +
+            index +
+            '">' +
+            playerRows +
+            "</div>" +
+            "</div>" +
+            "</div>";
+
+          return card;
+        }
+
+        // Render all team cards
+        var gridHtml = "";
+        for (var i = 0; i < teams.length; i++) {
+          gridHtml += buildCard(teams[i], i);
+        }
+        $("#teamsGrid").html(gridHtml);
+
+        // Toggle roster open/closed when "View Roster" is clicked
+        $("#teamsGrid").on("click", ".roster-toggle", function () {
+          var index = $(this).data("index");
+          $("#roster" + index).toggleClass("show");
+          $(this).toggleClass("open");
+        });
+
+        // Favourite / unfavourite a team
+        $("#teamsGrid").on("click", ".fav-btn", function () {
+          var team = $(this).data("team");
+          var nowFav = setFavoriteTeam(team);
+
+          $(".fav-btn").removeClass("active").html("&#9734;");
+
+          if (nowFav) {
+            $(this).addClass("active").html("&#9733;");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

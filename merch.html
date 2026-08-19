@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Esports - Merch Store</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Site-wide font pairing (Option 1): Rajdhani for headings, Inter for body, JetBrains Mono for stats/labels -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .pulse-navbar {
+            min-height: 76px;
+            background: rgba(11, 14, 20, 0.95);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .pulse-navbar .nav-link {
+            color: #d4d9e5 !important;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .pulse-navbar .nav-link:hover,
+        .pulse-navbar .nav-link.active {
+            color: var(--cyan) !important;
+        }
+
+        .pulse-navbar .merch-link {
+            border: 1px solid rgba(47, 230, 209, 0.6);
+            border-radius: 6px;
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+        }
+
+        :root {
+            --bg: #0b0e14;
+            --panel: #151a24;
+            --cyan: #2fe6d1;
+            --purple: #7b5cff;
+            --grey: #aab3c5;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background:
+                linear-gradient(rgba(11, 14, 20, .88), rgba(11, 14, 20, .93)),
+                url("images/bg-nebula.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+        }
+
+        .store-header p,
+        .category,
+        .price {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .top-bar {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .back-btn {
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        .store-header {
+            padding: 145px 20px 70px;
+            text-align: center;
+            background: linear-gradient(135deg,
+                    rgba(123, 92, 255, 0.18),
+                    rgba(47, 230, 209, 0.08));
+        }
+
+        .store-header p {
+            color: var(--cyan);
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+
+        .store-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+        }
+
+        .store-header .description {
+            max-width: 650px;
+            margin: 15px auto 0;
+            color: var(--grey);
+            letter-spacing: normal;
+            font-weight: normal;
+        }
+
+        .store-section {
+            padding: 60px 0;
+        }
+
+        .filter-area {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .filter-btn {
+            padding: 9px 18px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--panel);
+            color: var(--grey);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .product-card {
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel);
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyan);
+        }
+
+        .product-img {
+            height: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111722;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-body {
+            padding: 20px;
+        }
+
+        .category {
+            color: var(--purple);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-body h3 {
+            margin: 8px 0;
+            font-size: 1.2rem;
+        }
+
+        .product-body p {
+            min-height: 48px;
+            color: var(--grey);
+            font-size: 0.9rem;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .price {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .add-btn {
+            padding: 8px 13px;
+            border: none;
+            border-radius: 5px;
+            background: var(--cyan);
+            color: #071115;
+            font-weight: bold;
+        }
+
+        .add-btn:hover {
+            background: white;
+        }
+
+        .cart-section {
+            padding: 60px 0;
+            background: #111722;
+        }
+
+        .cart-box {
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--panel);
+        }
+
+        .cart-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .cart-title span {
+            color: var(--cyan);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .item-price {
+            color: var(--grey);
+            font-size: 0.9rem;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #111722;
+            color: white;
+        }
+
+        .qty-btn:hover {
+            color: var(--cyan);
+        }
+
+        .remove-btn {
+            margin-left: 12px;
+            border: none;
+            background: none;
+            color: #ff6f7d;
+        }
+
+        .empty-cart {
+            padding: 30px;
+            text-align: center;
+            color: var(--grey);
+        }
+
+        .total-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        #totalPrice {
+            color: var(--cyan);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: var(--cyan);
+            color: #071115;
+            font-weight: bold;
+        }
+
+        footer {
+            padding: 30px;
+            text-align: center;
+            color: var(--grey);
+        }
+
+        @media (max-width: 768px) {
+            .store-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .cart-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .filter-area {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top pulse-navbar">
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="images/pulse-logo.png" alt="Pulse Esports logo" class="brand-logo">
+
+                <span>PULSE ESPORTS</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pulseNavbar">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="pulseNavbar">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="schedule.html">
+                            Schedule
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="rankings.html">
+                            Rankings
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="teams.html">
+                            Teams
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="analysis.html">
+                            Analysis
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="sponsor.html">
+                            Sponsors
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">
+                            Register
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link merch-link active" href="merch.html">
+                            Merch
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+
+    <header class="store-header">
+        <p>OFFICIAL PULSE GEAR</p>
+        <h1>MERCH STORE</h1>
+
+        <p class="description">
+            Support Pulse Esports with our official club apparel
+            and gaming accessories.(With higher price than ouside.Spend it!)
+        </p>
+    </header>
+
+    <!-- Products -->
+    <section class="store-section">
+        <div class="container">
+
+            <h2>Our Products</h2>
+
+            <p style="color:#aab3c5;">
+                Choose your favourite Pulse Esports merchandise.
+            </p>
+
+
+            <!-- Filter -->
+            <div class="filter-area">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="apparel">Apparel</button>
+                <button class="filter-btn" data-filter="accessory">Accessories</button>
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- Product 1 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="apparel">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-pro-jersey.png" alt="Pulse Pro Jersey">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">APPAREL</span>
+
+                            <h3>Pulse Pro Jersey</h3>
+
+                            <p>
+                                Official Pulse Esports competitive jersey.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 59.90</span>
+
+                                <button class="add-btn" data-id="1">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Product 2 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="apparel">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-gaming-hoodie.png" alt="Pulse Gaming Hoodie">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">APPAREL</span>
+
+                            <h3>Pulse Gaming Hoodie</h3>
+
+                            <p>
+                                Comfortable hoodie for gaming and club events.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 79.90</span>
+
+                                <button class="add-btn" data-id="2">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Product 3 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="apparel">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-club-tshirt.png" alt="Pulse Club T-Shirt">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">APPAREL</span>
+
+                            <h3>Pulse Club T-Shirt</h3>
+
+                            <p>
+                                Casual Pulse T-shirt for members and supporters.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 39.90</span>
+
+                                <button class="add-btn" data-id="3">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Product 4 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="accessory">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-mouse-pad.png" alt="Pulse Mouse Pad">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">ACCESSORY</span>
+
+                            <h3>Pulse Mouse Pad</h3>
+
+                            <p>
+                                Large mouse pad for smooth gaming movement.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 29.90</span>
+
+                                <button class="add-btn" data-id="4">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Product 5 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="accessory">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-headset-stand.png" alt="Pulse Headset Stand">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">ACCESSORY</span>
+
+                            <h3>Pulse Headset Stand</h3>
+
+                            <p>
+                                A simple stand for organising your gaming headset.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 24.90</span>
+
+                                <button class="add-btn" data-id="5">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Product 6 -->
+                <div class="col-md-6 col-lg-4 product-item" data-category="accessory">
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/pulse-gaming-tumbler.png" alt="Pulse Gaming Tumbler">
+                        </div>
+
+                        <div class="product-body">
+                            <span class="category">ACCESSORY</span>
+
+                            <h3>Pulse Tumbler</h3>
+
+                            <p>
+                                Reusable tumbler with Pulse Esports branding.
+                            </p>
+
+                            <div class="product-bottom">
+                                <span class="price">RM 19.90</span>
+
+                                <button class="add-btn" data-id="6">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+    <section class="cart-section">
+        <div class="container">
+
+            <div class="cart-box">
+
+                <div class="cart-title">
+                    <h2>
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        Shopping Cart
+                    </h2>
+
+                    <span>
+                        <span id="cartCount">0</span> item(s)
+                    </span>
+                </div>
+
+
+                <div id="cartItems"></div>
+
+
+                <div class="total-area">
+                    <span>Total</span>
+                    <span id="totalPrice">RM 0.00</span>
+                </div>
+
+
+                <button id="checkoutBtn" class="checkout-btn">
+                    Checkout
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        &copy; 2026 Pulse Esports Club
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            var products = [
+                {id: 1, name: "Pulse Pro Jersey", price: 59.90},
+                {id: 2, name: "Pulse Gaming Hoodie", price: 79.90},
+                {id: 3, name: "Pulse Club T-Shirt", price: 39.90},
+                {id: 4, name: "Pulse Mouse Pad", price: 29.90},
+                {id: 5, name: "Pulse Headset Stand", price: 24.90},
+                {id: 6, name: "Pulse Tumbler", price: 19.90}
+            ];
+
+            var cartData = localStorage.getItem("pulse_cart");
+            var cart;
+
+            if (cartData === null) {
+                cart = [];
+            }
+            else {
+                cart = JSON.parse(cartData);
+            }
+
+
+            $(".filter-btn").click(function () {
+
+                var category = $(this).attr("data-filter");
+
+                $(".filter-btn").removeClass("active");
+                $(this).addClass("active");
+
+                if (category === "all") {
+                    $(".product-item").show();
+                }
+                else {
+                    $(".product-item").hide();
+                    $('.product-item[data-category="' + category + '"]').show();
+                }
+            });
+
+
+            $(".add-btn").click(function () {
+
+                var id = Number($(this).attr("data-id"));
+                var product;
+                var found = false;
+
+                for (var i = 0; i < products.length; i++) {
+                    if (products[i].id === id) {
+                        product = products[i];
+                        break;
+                    }
+                }
+
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        cart[i].qty = cart[i].qty + 1;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found === false) {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        qty: 1
+                    });
+                }
+
+                saveCart();
+                displayCart();
+            });
+
+
+            function displayCart() {
+
+                var html = "";
+                var total = 0;
+                var count = 0;
+
+                if (cart.length === 0) {
+                    html = '<div class="empty-cart">Your shopping cart is empty.</div>';
+                }
+
+                for (var i = 0; i < cart.length; i++) {
+
+                    var itemTotal = cart[i].price * cart[i].qty;
+
+                    total = total + itemTotal;
+                    count = count + cart[i].qty;
+
+                    html +=
+                        '<div class="cart-item">' +
+
+                        '<div>' +
+                        '<strong>' + cart[i].name + '</strong>' +
+                        '<div class="item-price">RM ' +
+                        cart[i].price.toFixed(2) + ' each</div>' +
+                        '</div>' +
+
+                        '<div>' +
+                        '<button class="qty-btn minus" data-id="' +
+                        cart[i].id + '">-</button> ' +
+
+                        cart[i].qty +
+
+                        ' <button class="qty-btn plus" data-id="' +
+                        cart[i].id + '">+</button>' +
+                        '</div>' +
+
+                        '<div>' +
+                        'RM ' + itemTotal.toFixed(2) +
+
+                        '<button class="remove-btn remove" data-id="' +
+                        cart[i].id + '">' +
+                        '<i class="fa-solid fa-trash"></i>' +
+                        '</button>' +
+                        '</div>' +
+
+                        '</div>';
+                }
+
+                $("#cartItems").html(html);
+                $("#cartCount").text(count);
+                $("#totalPrice").text("RM " + total.toFixed(2));
+            }
+
+            $(document).on("click", ".plus", function () {
+
+                var id = Number($(this).attr("data-id"));
+
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        cart[i].qty++;
+                        break;
+                    }
+                }
+
+                saveCart();
+                displayCart();
+            });
+
+            $(document).on("click", ".minus", function () {
+
+                var id = Number($(this).attr("data-id"));
+
+                for (var i = 0; i < cart.length; i++) {
+
+                    if (cart[i].id === id) {
+
+                        cart[i].qty--;
+
+                        if (cart[i].qty <= 0) {
+                            cart.splice(i, 1);
+                        }
+
+                        break;
+                    }
+                }
+
+                saveCart();
+                displayCart();
+            });
+
+
+            $(document).on("click", ".remove", function () {
+
+                var id = Number($(this).attr("data-id"));
+
+                for (var i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        cart.splice(i, 1);
+                        break;
+                    }
+                }
+
+                saveCart();
+                displayCart();
+            });
+
+
+            $("#checkoutBtn").click(function () {
+
+                if (cart.length === 0) {
+                    alert("Your shopping cart is empty.");
+                }
+                else {
+                    alert("Thank you for shopping with Pulse Esports!");
+
+                    cart = [];
+
+                    saveCart();
+                    displayCart();
+                }
+            });
+
+
+            function saveCart() {
+                localStorage.setItem(
+                    "pulse_cart",
+                    JSON.stringify(cart)
+                );
+            }
+
+
+            displayCart();
+
+        });
+    </script>
+
+</body>
+
+</html>
